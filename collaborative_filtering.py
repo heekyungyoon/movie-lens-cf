@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from os import path
-import numpy as np
+from scipy.sparse import save_npz, load_npz
 import pandas as pd
 from similarity import *
 
@@ -40,16 +40,13 @@ class UserBased(CollaborativeFiltering):
     def save_sim_matrix(self, filename):
         print("Start saving similarity matrix...")
         t0 = datetime.utcnow()
-        np.savez(filename,
-                 data=self.sim_matrix.data, indices=self.sim_matrix.indices, indptr=self.sim_matrix.indptr,
-                 shape=self.sim_matrix.shape)
+        save_npz(filename, self.sim_matrix)
         print(datetime.utcnow() - t0)
         print("Saved!")
         return
 
     def load_sim_matrix(self, filename):
-        loader = np.load(filename)
-        self.sim_matrix = csr_matrix((loader['data'], loader['indices'], loader['indptr']), shape=loader['shape'])
+        self.sim_matrix = load_npz(filename)
 
     def predict_single(self, user_id, movie_id, top_k=30):
         items_to_exclude = self.rating_matrix.indices[

@@ -7,7 +7,7 @@ DATA = {
     "RATING_FILE": "ratings.csv",
     "MOVIE_FILE": "movies.csv",
     "TAG_FILE": "tags.csv"
-}
+} 
 
 
 if __name__ == "__main__":

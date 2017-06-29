@@ -24,10 +24,10 @@ class UserBased(CollaborativeFiltering):
     def load_sim_matrix(self, filename):
         self.sim_matrix = load_npz(filename)
 
-    def predict_single(self, user_id, movie_id, top_k=30):
+    def predict_single(self, user_id, item_id, top_k=30):
         items_to_exclude = self.rating_matrix.indices[
                            self.rating_matrix.indptr[user_id]:self.rating_matrix.indptr[user_id + 1]]
-        if movie_id in items_to_exclude:
+        if item_id in items_to_exclude:
             raise ValueError
 
         user_similarities = list()
@@ -44,14 +44,14 @@ class UserBased(CollaborativeFiltering):
             rated_items = self.rating_matrix.indices[self.rating_matrix.indptr[u]:self.rating_matrix.indptr[u+1]]
             for i in range(len(rated_items)):
                 r_item = rated_items[i]
-                if r_item == movie_id:
+                if r_item == item_id:
                     idx = i
                     rating = self.rating_matrix.data[self.rating_matrix.indptr[u]+idx]
                     numerator += s * rating
                     denominator += s
                     counter += 1
                     break
-                elif r_item > movie_id:
+                elif r_item > item_id:
                     break
             if counter == top_k:
                 break
@@ -74,27 +74,27 @@ class UserBased(CollaborativeFiltering):
         items_to_exclude = self.rating_matrix.indices[self.rating_matrix.indptr[user_id]:self.rating_matrix.indptr[user_id + 1]]
         for sim, sim_user_id in similar_users[:top_k]:
             for i in range(self.rating_matrix.indptr[sim_user_id], self.rating_matrix.indptr[sim_user_id + 1]):
-                movie_id = self.rating_matrix.indices[i]
-                if movie_id not in items_to_exclude:
+                item_id = self.rating_matrix.indices[i]
+                if item_id not in items_to_exclude:
                     rating = self.rating_matrix.data[i]
-                    if recommend_dict.get(movie_id):
-                        recommend_dict[movie_id].append((sim, rating))
+                    if recommend_dict.get(item_id):
+                        recommend_dict[item_id].append((sim, rating))
                     else:
-                        recommend_dict[movie_id] = [(sim, rating)]
+                        recommend_dict[item_id] = [(sim, rating)]
 
-        for movie_id in recommend_dict:
+        for item_id in recommend_dict:
             numerator = 0
             denominator = 0
-            for sim, rating in recommend_dict[movie_id]:
+            for sim, rating in recommend_dict[item_id]:
                 numerator += sim * rating
                 denominator += sim
             if denominator > 0:
-                recommendations.append((numerator/denominator, movie_id, len(recommend_dict[movie_id])))
+                recommendations.append((numerator/denominator, item_id, len(recommend_dict[item_id])))
         recommendations = sorted(recommendations, reverse=True)
         return recommendations[:top_k]
 
-    def id_to_title(self, movie_id):
-        return list(self.movie_df.loc[self.movie_df.movieId == movie_id, "title"])[0]
+    def id_to_title(self, item_id):
+        return list(self.movie_df.loc[self.movie_df.movieId == item_id, "title"])[0]
 
     def predict(self):
         pass

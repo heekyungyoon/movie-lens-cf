@@ -14,7 +14,7 @@ class CollaborativeFiltering(object):
     def train(self, train_set):
         pass
 
-    def predict_single(self, user_id, movie_id):
+    def predict_single(self, user_id, item_id):
         prediction = 0
         return prediction
 

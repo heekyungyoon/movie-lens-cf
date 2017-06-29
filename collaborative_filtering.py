@@ -11,7 +11,7 @@ class CollaborativeFiltering(object):
         del rating
         self.movie_df = pd.read_csv(path.join(data["DATA_DIR"], data["MOVIE_FILE"]))
 
-    def train(self, train_set):
+    def train(self):
         pass
 
     def predict_single(self, user_id, item_id):

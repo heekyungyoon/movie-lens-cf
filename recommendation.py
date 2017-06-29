@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from collaborative_filtering import UserBased
+from knn import UserBased
 
 
 DATA = {
@@ -7,7 +7,7 @@ DATA = {
     "RATING_FILE": "ratings.csv",
     "MOVIE_FILE": "movies.csv",
     "TAG_FILE": "tags.csv"
-} 
+}
 
 
 if __name__ == "__main__":

@@ -1,5 +1,8 @@
 # movie-lens-cf
-classic collaborative filtering with movie lens data
+collaborative filtering with movie lens data
+test follownig models:
+- K Nearest Neighbor: User based & Item based
+- Matrix Factorization: L2 cost function with Stochastic Gradient Descent
 
 ## Rating Prediction vs Recommendation
 - Rating Prediction: Given user_id and unrated movie_id, predict rating.
